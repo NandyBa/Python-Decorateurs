@@ -1,5 +1,6 @@
 from datetime import datetime # Nécessaire pour récupérer les dates auquels ont lieu les erreurs
 from time import sleep # Nécessaire pour attendre entre 2 requêtes
+import collections
 
 
 def exécuter_jusqu_à_accomplissement_ou_dépassement_du_nombre_d_essais_autorisés(
@@ -47,7 +48,12 @@ def exécuter_jusqu_à_accomplissement_ou_dépassement_du_nombre_d_essais_autori
 					if compteur_essai == nombre_d_essais:
 						raise e
 
-					sleep(temps_d_attente_entre_2_essais)
+					if isinstance(temps_d_attente_entre_2_essais, collections.abc.Iterable):
+						it = iter(temps_d_attente_entre_2_essais)
+						dt = next(it)
+					else:
+						dt = temps_d_attente_entre_2_essais
+					sleep(dt)
 
 			return resultat
 		return wrapper
